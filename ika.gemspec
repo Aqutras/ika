@@ -7,8 +7,8 @@ require "ika/version"
 Gem::Specification.new do |s|
   s.name        = "ika"
   s.version     = Ika::VERSION
-  s.authors     = ["Makoto NAKAYA"]
-  s.email       = ["nakaya@aqte.net"]
+  s.authors     = ["Makoto NAKAYA", 'Shoya TANAKA']
+  s.email       = ["nakaya@aqte.net", 'tanaka@aqte.net']
   s.homepage    = "https://github.com/Aqutras/ika"
   s.summary     = "Implement Import/Export feature to ActiveRecord models."
   s.description = "Implement Import/Export feature to ActiveRecord models."
