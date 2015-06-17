@@ -1,0 +1,2 @@
+module Ika
+end
