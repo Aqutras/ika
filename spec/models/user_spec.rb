@@ -48,6 +48,28 @@ RSpec.describe User, type: :model do
       ]
       expect(User.export(nil)).to match_json_expression(ret)
     end
+
+    it 'get selected relation' do
+      ret = [
+        {
+          'id' => 1,
+          'email' => 'user@mock.com',
+          'name' => 'user name',
+          'created_at' => JSON.parse(user.to_json)['created_at'],
+          'updated_at' => JSON.parse(user.to_json)['updated_at'],
+          'group_users' => [
+            {
+              'id' => 1,
+              'user_id' => 1,
+              'group_id' => 1,
+              'created_at' => JSON.parse(group_user.to_json)['created_at'],
+              'updated_at' => JSON.parse(group_user.to_json)['updated_at']
+            }
+          ]
+        }
+      ]
+      expect(User.export(:group_users)).to match_json_expression(ret)
+    end
   end
 
   context '#export' do
@@ -90,6 +112,26 @@ RSpec.describe User, type: :model do
         'updated_at' => JSON.parse(user.to_json)['updated_at']
       }
       expect(User.first.export(nil)).to match_json_expression(ret)
+    end
+
+    it 'get selected relation' do
+      ret = {
+        'id' => 1,
+        'email' => 'user@mock.com',
+        'name' => 'user name',
+        'created_at' => JSON.parse(user.to_json)['created_at'],
+        'updated_at' => JSON.parse(user.to_json)['updated_at'],
+        'group_users' => [
+          {
+            'id' => 1,
+            'user_id' => 1,
+            'group_id' => 1,
+            'created_at' => JSON.parse(group_user.to_json)['created_at'],
+            'updated_at' => JSON.parse(group_user.to_json)['updated_at']
+          }
+        ]
+      }
+      expect(User.first.export(:group_users)).to match_json_expression(ret)
     end
   end
 end
