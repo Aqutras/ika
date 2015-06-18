@@ -55,6 +55,7 @@ GEM
       activesupport (>= 4.1.0)
     i18n (0.7.0)
     json (1.8.3)
+    json_expressions (0.8.3)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -127,6 +128,7 @@ PLATFORMS
 DEPENDENCIES
   factory_girl_rails
   ika!
+  json_expressions
   rspec-rails (~> 3.0)
   sqlite3 (~> 1.0)
 
