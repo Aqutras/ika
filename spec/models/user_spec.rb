@@ -35,6 +35,19 @@ RSpec.describe User, type: :model do
       ]
       expect(User.export).to match_json_expression(ret)
     end
+
+    it 'get only self' do
+      ret = [
+        {
+          'id' => 1,
+          'email' => 'user@mock.com',
+          'name' => 'user name',
+          'created_at' => JSON.parse(user.to_json)['created_at'],
+          'updated_at' => JSON.parse(user.to_json)['updated_at']
+        }
+      ]
+      expect(User.export(nil)).to match_json_expression(ret)
+    end
   end
 
   context '#export' do
@@ -66,6 +79,17 @@ RSpec.describe User, type: :model do
       }
 
       expect(User.first.export).to match_json_expression(ret)
+    end
+
+    it 'get only self' do
+      ret = {
+        'id' => 1,
+        'email' => 'user@mock.com',
+        'name' => 'user name',
+        'created_at' => JSON.parse(user.to_json)['created_at'],
+        'updated_at' => JSON.parse(user.to_json)['updated_at']
+      }
+      expect(User.first.export(nil)).to match_json_expression(ret)
     end
   end
 end
