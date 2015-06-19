@@ -33,7 +33,7 @@ RSpec.describe User, type: :model do
           ]
         }
       ]
-      expect(User.export).to match_json_expression(ret)
+      expect(User.export(include: [:group_users, :groups])).to match_json_expression(ret)
     end
 
     it 'get only self' do
@@ -46,7 +46,7 @@ RSpec.describe User, type: :model do
           'updated_at' => JSON.parse(user.to_json)['updated_at']
         }
       ]
-      expect(User.export(nil)).to match_json_expression(ret)
+      expect(User.export).to match_json_expression(ret)
     end
 
     it 'get selected relation' do
@@ -68,7 +68,7 @@ RSpec.describe User, type: :model do
           ]
         }
       ]
-      expect(User.export(:group_users)).to match_json_expression(ret)
+      expect(User.export(include: :group_users)).to match_json_expression(ret)
     end
   end
 
@@ -100,7 +100,7 @@ RSpec.describe User, type: :model do
         ]
       }
 
-      expect(User.first.export).to match_json_expression(ret)
+      expect(User.first.export(include: [:group_users, :groups])).to match_json_expression(ret)
     end
 
     it 'get only self' do
@@ -111,7 +111,7 @@ RSpec.describe User, type: :model do
         'created_at' => JSON.parse(user.to_json)['created_at'],
         'updated_at' => JSON.parse(user.to_json)['updated_at']
       }
-      expect(User.first.export(nil)).to match_json_expression(ret)
+      expect(User.first.export).to match_json_expression(ret)
     end
 
     it 'get selected relation' do
@@ -131,7 +131,7 @@ RSpec.describe User, type: :model do
           }
         ]
       }
-      expect(User.first.export(:group_users)).to match_json_expression(ret)
+      expect(User.first.export(include: :group_users)).to match_json_expression(ret)
     end
   end
 end
