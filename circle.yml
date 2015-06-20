@@ -1,0 +1,10 @@
+database:
+  override:
+    - "cd spec/dummy && mv config/database.ci.yml config/database.yml && bundle exec rake db:create db:migrate --trace"
+test:
+  override:
+    - bundle exec rspec --color --format documentation
+machine:
+  ruby:
+    version: 2.2.2
+  timezone: Asia/Tokyo
