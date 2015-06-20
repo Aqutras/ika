@@ -1,6 +1,7 @@
 # Ika
 [![Gem Version](https://badge.fury.io/rb/ika.svg)](http://badge.fury.io/rb/ika)
 [![Circle CI](https://circleci.com/gh/Aqutras/ika.svg?style=shield)](https://circleci.com/gh/Aqutras/ika)
+[![Coverage Status](https://coveralls.io/repos/Aqutras/ika/badge.svg?branch=master)](https://coveralls.io/r/Aqutras/ika?branch=master)
 
 Ika implements the function that export/import ActiveModel data with json.
 
