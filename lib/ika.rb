@@ -14,6 +14,33 @@ module Ika
   end
 
   module ClassMethods
+    def import(json_or_array)
+      if json_or_array.is_a?(Array)
+        objects = json_or_array
+      else
+        objects = JSON.parse(json_or_array)
+        objects = [objects] unless objects.is_a?(Array)
+      end
+
+      ActiveRecord::Base.transaction do
+        objects.each do |object|
+          object_params = {}
+          object.keys.each do |key|
+            if object[key].is_a?(Array)
+              self.reflections[key].klass.import(object[key])
+            else
+              object_params[key] = object[key]
+            end
+          end
+          if self.exists?(id: object['id'].to_i)
+            self.where(id: object['id'].to_i).first.update(object_params)
+          else
+            self.create(object_params)
+          end
+        end
+      end
+    end
+
     def export(options = {}, objects = nil)
       all_symbol = true
       options[:include] ||= []

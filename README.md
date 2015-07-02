@@ -15,6 +15,10 @@ gem 'ika'
 
 ## Usage
 
+You can use `export` or `import` method on your model or relation.
+
+### Example
+
 In case: `Group` has many tags and `User` belongs to multiple groups with `GroupUsers` such as below.
 
 ```ruby
@@ -39,7 +43,7 @@ class Tag < ActiveRecord::Base
 end
 ```
 
-Now you can export with `export` method on your model or relation.
+Now you can export with `export` method on your model or relation and import with `import` method on your model.
 
 ```ruby
 require 'json'
@@ -55,8 +59,14 @@ JSON.parse User.find(id: 2).export
 # with include option
 JSON.parse User.export(include: :groups)
 # => [{"id":1,"name":"iruca3","groups":[{"id":1,"name":"aqutras"},{"id":2,"name":"Splatoon"}]},{"id":2,"name":"inkling","groups":[{"id":2,"name":"Splatoon"}]}]
-JSON.parse User.find(id: 1).export(include: [{groups: [:tags]}])
+data = JSON.parse(User.find(id: 1).export(include: [{groups: [:tags]}]))
 # => {"id":1,"name":"iruca3","groups":[{"id":1,"name":"aqutras","tags":[{"id":1,"name":"Company"}]},{"id":2,"name":"Splatoon","tags":[{"id":2,"name":"Game"},{"id":3,"name":"Inkling"}]}]}
+
+# import (id, created_at and updated_at are completely imported with the same value)
+User.destroy_all
+Group.destroy_all
+Tag.destroy_all
+User.import(data)
 ```
 
 This project rocks and uses MIT-LICENSE.
