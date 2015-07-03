@@ -1,7 +1,12 @@
+require 'carrierwave/serialization'
+require 'carrierwave/base64uploader'
+
 module Ika
   extend ActiveSupport::Concern
 
   module ClassMethods
+    include ::CarrierWave::Base64Uploader
+
     def import(json_or_array)
       if json_or_array.is_a?(Array)
         objects = json_or_array
@@ -15,15 +20,19 @@ module Ika
           object_params = {}
           object.keys.each do |key|
             if object[key].is_a?(Array)
-              self.reflections[key].klass.import(object[key])
+              reflections[key].klass.import(object[key])
             else
-              object_params[key] = object[key]
+              if new.try(key.to_sym).class.superclass == CarrierWave::Uploader::Base
+                object_params[key] = base64_conversion(object[key]['data'], object[key]['name'])
+              else
+                object_params[key] = object[key]
+              end
             end
           end
-          if self.exists?(id: object['id'].to_i)
-            self.where(id: object['id'].to_i).first.update(object_params)
+          if exists?(id: object['id'].to_i)
+            where(id: object['id'].to_i).first.update(object_params)
           else
-            self.create(object_params)
+            create(object_params)
           end
         end
       end
@@ -96,5 +105,3 @@ module Ika
 end
 
 ActiveRecord::Base.send(:include, Ika)
-
-require 'carrierwave/serialization'
