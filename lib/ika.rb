@@ -30,6 +30,7 @@ module Ika
     end
 
     def export(options = {}, objects = nil)
+      CarrierWave::Uploader::Base.json_with_raw_data = true
       all_symbol = true
       options[:include] ||= []
       options[:include] = [options[:include]] unless options[:include].is_a?(Array)
@@ -38,7 +39,11 @@ module Ika
         all_symbol = false unless opt.is_a?(Symbol)
       end
 
-      return objects.to_json(include: options[:include]) if all_symbol
+      if all_symbol
+        json = objects.to_json(include: options[:include])
+        CarrierWave::Uploader::Base.json_with_raw_data = false
+        return json
+      end
 
       whole_obj_arr = []
       objects.each do |object|
@@ -54,11 +59,13 @@ module Ika
         end
         whole_obj_arr.push(obj_arr)
       end
+      CarrierWave::Uploader::Base.json_with_raw_data = false
       JSON.generate(whole_obj_arr)
     end
   end
 
   def export(options = {}, object = nil)
+    CarrierWave::Uploader::Base.json_with_raw_data = true
     objects ||= self
     all_symbol = true
     options[:include] ||= []
@@ -67,7 +74,11 @@ module Ika
       all_symbol = false unless opt.is_a?(Symbol)
     end
 
-    return objects.to_json(include: options[:include]) if all_symbol
+    if all_symbol
+      json = objects.to_json(include: options[:include])
+      CarrierWave::Uploader::Base.json_with_raw_data = false
+      return json
+    end
 
     obj_hash = JSON.parse objects.to_json
     options[:include].each do |relation|
@@ -79,8 +90,11 @@ module Ika
         obj_hash[relation] = JSON.parse(objects.try(relation).to_json)
       end
     end
+    CarrierWave::Uploader::Base.json_with_raw_data = false
     JSON.generate(obj_hash)
   end
 end
 
 ActiveRecord::Base.send(:include, Ika)
+
+require 'carrierwave/serialization'
