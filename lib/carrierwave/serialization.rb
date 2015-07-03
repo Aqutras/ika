@@ -16,10 +16,10 @@ module CarrierWave
             mime = MIME::Types.type_for(file.file)[0].to_s
             md5 = Digest::MD5.file(file.file).to_s
             filename = Pathname.new(file.file).basename.to_s
-            base64 = 'data:' + mime + ';base64,' + Base64.encode64(read)
-            {name: filename, data: base64, md5: md5}
+            base64 = 'data:' + mime + ';base64,' + Base64.strict_encode64(read)
+            {url: url, name: filename, data: base64, md5: md5}
           else
-            {name: nil, data: nil, md5: nil}
+            {url: nil, name: nil, data: nil, md5: nil}
           end
         else
           {"url" => url}.merge Hash[versions.map { |name, version| [name, { "url" => version.url }] }]

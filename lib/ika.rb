@@ -17,19 +17,26 @@ module Ika
 
       ActiveRecord::Base.transaction do
         objects.each do |object|
+          record_exists = true if exists?(id: object['id'].to_i)
+
           object_params = {}
           object.keys.each do |key|
             if object[key].is_a?(Array)
               reflections[key].klass.import(object[key])
             else
               if new.try(key.to_sym).class.superclass == CarrierWave::Uploader::Base
-                object_params[key] = base64_conversion(object[key]['data'], object[key]['name'])
+                need_update = true
+                if File.exist?('public' + object[key]['url'])
+                  md5 = Digest::MD5.file('public' + object[key]['url'])
+                  need_update = false if md5 == object[key]['md5'] && record_exists == true
+                end
+                object_params[key] = base64_conversion(object[key]['data'], object[key]['name']) if need_update
               else
                 object_params[key] = object[key]
               end
             end
           end
-          if exists?(id: object['id'].to_i)
+          if record_exists
             where(id: object['id'].to_i).first.update(object_params)
           else
             create(object_params)
