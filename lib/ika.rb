@@ -1,3 +1,6 @@
+if Rails.env == 'test'
+  require 'carrierwave'
+end
 require 'carrierwave/serialization'
 require 'carrierwave/base64uploader'
 

@@ -8,3 +8,4 @@ spec/dummy/log/*.log
 spec/dummy/public/uploads
 spec/dummy/Gemfile.lock
 coverage/
+.DS_Store
