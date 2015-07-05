@@ -3,7 +3,7 @@
 [![Circle CI](https://circleci.com/gh/Aqutras/ika.svg?style=shield)](https://circleci.com/gh/Aqutras/ika)
 [![Coverage Status](https://coveralls.io/repos/Aqutras/ika/badge.svg?branch=master)](https://coveralls.io/r/Aqutras/ika?branch=master)
 
-Ika implements the function that export/import ActiveModel data with json.
+Ika implements the function that export/import ActiveModel data with json. Ika also supports [carrierwave](https://github.com/carrierwaveuploader/carrierwave).
 
 ## Installation
 
@@ -69,4 +69,16 @@ Tag.destroy_all
 User.import(data)
 ```
 
+## Others
+
+* If the same id exists, Ika uses `UPDATE`.
+* Uploaded files by `carrierwave` will be checked their md5 hash and do nothing if they exist and md5 is matched.
+
+## Not yet implemented features
+
+* Sync mode (If class method `import` is called with sync mode, delete all data that are not contained exporting json) 
+
+## License
+
+Copyright (c) 2015 Aqutras
 This project rocks and uses MIT-LICENSE.
