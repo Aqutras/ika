@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'fileutils'
 require 'pry'
 require 'pry-byebug'
 
@@ -6,6 +7,31 @@ RSpec.describe User, type: :model do
   let(:user) { FactoryGirl.create(:user, id: 1) }
   let(:group) { FactoryGirl.create(:group, id: 1) }
   let(:group_user) { FactoryGirl.create(:group_user, user_id: 1, group_id: 1) }
+
+  context '.import' do
+    let(:export_data) { File.read(File.expand_path('../../factories/export_string', __FILE__)) }
+    before do
+      FileUtils.rm_rf(File.expand_path('spec/dummy/public/uploads'))
+      User.import(export_data)
+    end
+    let(:user) { User.find_by(id: 1) }
+    it 'id has been imported' do
+      expect(user.id).to eq 1
+    end
+    it 'email has been imported' do
+      expect(user.email).to eq 'a'
+    end
+    it 'name has been imported' do
+      expect(user.name).to eq 'b'
+    end
+    it 'image has been imported as CarrierWave' do
+      expect(user.image.class.superclass).to eq CarrierWave::Uploader::Base
+    end
+    it 'image file has been imported' do
+      expect(File.exists?(user.image.path)).to eq true
+    end
+  end
+
   context '.export' do
     it 'get all relation' do
       ret = [
