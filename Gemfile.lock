@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ika (0.0.7)
+    ika (1.0.0)
       rails (~> 4.2.0)
 
 GEM
@@ -151,7 +151,7 @@ GEM
     slop (3.6.0)
     sprockets (3.2.0)
       rack (~> 1.0)
-    sprockets-rails (2.3.1)
+    sprockets-rails (2.3.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
@@ -181,4 +181,4 @@ DEPENDENCIES
   sqlite3 (~> 1.0)
 
 BUNDLED WITH
-   1.10.3
+   1.10.5
