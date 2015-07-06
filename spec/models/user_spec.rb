@@ -10,25 +10,52 @@ RSpec.describe User, type: :model do
 
   context '.import' do
     let(:export_data) { File.read(File.expand_path('../../factories/export_string', __FILE__)) }
-    before do
-      FileUtils.rm_rf(File.expand_path('spec/dummy/public/uploads'))
-      User.import(export_data)
-    end
     let(:user) { User.find_by(id: 1) }
-    it 'id has been imported' do
-      expect(user.id).to eq 1
+    context 'no sync' do
+      before do
+        FileUtils.rm_rf(File.expand_path('spec/dummy/public/uploads'))
+        User.import(export_data)
+      end
+      it 'id has been imported' do
+        expect(user.id).to eq 1
+      end
+      it 'email has been imported' do
+        expect(user.email).to eq 'a'
+      end
+      it 'name has been imported' do
+        expect(user.name).to eq 'b'
+      end
+      it 'image has been imported as CarrierWave' do
+        expect(user.image.class.superclass).to eq CarrierWave::Uploader::Base
+      end
+      it 'image file has been imported' do
+        expect(File.exists?(user.image.path)).to eq true
+      end
     end
-    it 'email has been imported' do
-      expect(user.email).to eq 'a'
-    end
-    it 'name has been imported' do
-      expect(user.name).to eq 'b'
-    end
-    it 'image has been imported as CarrierWave' do
-      expect(user.image.class.superclass).to eq CarrierWave::Uploader::Base
-    end
-    it 'image file has been imported' do
-      expect(File.exists?(user.image.path)).to eq true
+    context 'sync' do
+      before do
+        create(:user, id: 2)
+        FileUtils.rm_rf(File.expand_path('spec/dummy/public/uploads'))
+        User.import(export_data, sync: true)
+      end
+      it 'existed data is deleted' do
+        expect(User.exists?(id: 2)).to eq false
+      end
+      it 'id has been imported' do
+        expect(user.id).to eq 1
+      end
+      it 'email has been imported' do
+        expect(user.email).to eq 'a'
+      end
+      it 'name has been imported' do
+        expect(user.name).to eq 'b'
+      end
+      it 'image has been imported as CarrierWave' do
+        expect(user.image.class.superclass).to eq CarrierWave::Uploader::Base
+      end
+      it 'image file has been imported' do
+        expect(File.exists?(user.image.path)).to eq true
+      end
     end
   end
 
