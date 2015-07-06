@@ -67,6 +67,11 @@ User.destroy_all
 Group.destroy_all
 Tag.destroy_all
 User.import(data)
+
+# sync mode is available.
+User.import(User.where(id: 1).export, sync: true)
+User.exist?(id: 2)
+# => false
 ```
 
 ## Others

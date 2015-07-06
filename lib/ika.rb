@@ -10,7 +10,7 @@ module Ika
   module ClassMethods
     include ::CarrierWave::Base64Uploader
 
-    def import(json_or_array)
+    def import(json_or_array, options = {})
       if json_or_array.is_a?(Array)
         objects = json_or_array
       else
@@ -19,6 +19,11 @@ module Ika
       end
 
       ActiveRecord::Base.transaction do
+        if options && options[:sync]
+          remove_target_ids = all.pluck(:id)
+        else
+          remove_target_ids = []
+        end
         objects.each do |object|
           record_exists = true if exists?(id: object['id'].to_i)
 
@@ -44,7 +49,9 @@ module Ika
           else
             create(object_params)
           end
+          remove_target_ids -= [object['id'].to_i]
         end
+        where(id: remove_target_ids).destroy_all
       end
     end
 
