@@ -34,11 +34,16 @@ module Ika
             else
               if new.try(key.to_sym).class.superclass == CarrierWave::Uploader::Base
                 need_update = true
-                if File.exist?('public' + object[key]['url'])
-                  md5 = Digest::MD5.file('public' + object[key]['url'])
-                  need_update = false if md5 == object[key]['md5'] && record_exists == true
+                obj_url = object[key]['url'] || object[key][:url]
+                obj_md5 = object[key]['md5'] || object[key][:md5]
+                obj_data = object[key]['data'] || object[key][:data]
+                obj_name = object[key]['name'] || object[key][:name]
+                if obj_url && File.exist?('public' + obj_url)
+                  md5 = Digest::MD5.file('public' + obj_url)
+                  need_update = false if md5 == obj_md5 && record_exists == true
+                elsif obj_url
+                  object_params[key] = base64_conversion(obj_data, obj_name) if need_update
                 end
-                object_params[key] = base64_conversion(object[key]['data'], object[key]['name']) if need_update
               else
                 object_params[key] = object[key]
               end
