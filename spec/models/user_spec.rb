@@ -4,13 +4,14 @@ require 'pry'
 require 'pry-byebug'
 
 RSpec.describe User, type: :model do
-  let(:user) { FactoryGirl.create(:user, id: 1) }
-  let(:group) { FactoryGirl.create(:group, id: 1) }
-  let(:group_user) { FactoryGirl.create(:group_user, user_id: 1, group_id: 1) }
+  let(:user) { create(:user, id: 1) }
+  let(:group) { create(:group, id: 1) }
+  let(:group_user) { create(:group_user, user_id: 1, group_id: 1) }
 
   context '.import' do
-    let(:export_data) { File.read(File.expand_path('../../factories/export_string', __FILE__)) }
+    let(:export_data) { File.read(File.expand_path('spec/tmp/export_string')) }
     let(:user) { User.find_by(id: 1) }
+
     context 'no sync' do
       before do
         FileUtils.rm_rf(File.expand_path('spec/dummy/public/uploads'))
@@ -29,9 +30,10 @@ RSpec.describe User, type: :model do
         expect(user.image.class.superclass).to eq CarrierWave::Uploader::Base
       end
       it 'image file has been imported' do
-        expect(File.exists?(user.image.path)).to eq true
+        expect(File.exist?(user.image.path)).to eq true
       end
     end
+
     context 'sync' do
       before do
         create(:user, id: 2)
@@ -54,7 +56,7 @@ RSpec.describe User, type: :model do
         expect(user.image.class.superclass).to eq CarrierWave::Uploader::Base
       end
       it 'image file has been imported' do
-        expect(File.exists?(user.image.path)).to eq true
+        expect(File.exist?(user.image.path)).to eq true
       end
     end
   end
@@ -94,7 +96,8 @@ RSpec.describe User, type: :model do
           ]
         }
       ]
-      expect(User.export(include: [:groups, :group_users])).to match_json_expression(ret)
+      export = User.export(include: [:groups, :group_users])
+      expect(export).to match_json_expression(ret)
     end
 
     it 'get only self' do
@@ -179,7 +182,8 @@ RSpec.describe User, type: :model do
         ]
       }
 
-      expect(User.first.export(include: [:group_users, :groups])).to match_json_expression(ret)
+      export = User.find_by(id: 1).export(include: [:group_users, :groups])
+      expect(export).to match_json_expression(ret)
     end
 
     it 'get only self' do
@@ -222,7 +226,8 @@ RSpec.describe User, type: :model do
           }
         ]
       }
-      expect(User.first.export(include: :group_users)).to match_json_expression(ret)
+      export = User.find_by(id: 1).export(include: :group_users)
+      expect(export).to match_json_expression(ret)
     end
   end
 end
