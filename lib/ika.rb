@@ -25,7 +25,10 @@ module Ika
           remove_target_ids = []
         end
         objects.each do |object|
-          record_exists = true if exists?(id: object['id'].to_i)
+          if exists?(id: object['id'].to_i)
+            record_exists = true
+            exist_object = where(id: object['id'].to_i).first
+          end
 
           object_params = {}
           object.keys.each do |key|
@@ -40,9 +43,10 @@ module Ika
                 obj_name = object[key]['name'] || object[key][:name]
                 if obj_url && File.exist?('public' + obj_url)
                   md5 = Digest::MD5.file('public' + obj_url)
-                  need_update = false if md5 == obj_md5 && record_exists == true
-                elsif obj_url
-                  object_params[key] = base64_conversion(obj_data, obj_name) if need_update
+                  need_update = false if md5 == obj_md5 && record_exists && obj_name == Pathname(exist_object.try(key.to_sym).to_s).basename.to_s
+                end
+                if obj_url && need_update
+                  object_params[key] = base64_conversion(obj_data, obj_name)
                 end
               else
                 object_params[key] = object[key]
