@@ -19,10 +19,10 @@ module Ika
       end
 
       ActiveRecord::Base.transaction do
-        sync = false
         if options && options[:sync]
-          sync = true
-          destroy_all
+          remove_target_ids = all.pluck(:id)
+        else
+          remove_target_ids = []
         end
         objects.each do |object|
           record_exists = false
@@ -46,7 +46,7 @@ module Ika
                   md5 = Digest::MD5.file('public' + obj_url)
                   need_update = false if md5 == obj_md5 && record_exists && obj_name == Pathname(exist_object.try(key.to_sym).to_s).basename.to_s
                 end
-                if obj_url && (need_update || sync)
+                if obj_url && need_update
                   object_params[key] = base64_conversion(obj_data, obj_name)
                 elsif obj_url.blank?
                   object_params[('remove_' + key).to_sym] = true
@@ -57,11 +57,14 @@ module Ika
             end
           end
           if record_exists
-            where(id: object['id'].to_i).first.update(object_params)
+            exist_object.attributes = object_params
+            exist_object.save(validate: false)
           else
-            create(object_params)
+            new(object_params).save(validate: false)
           end
+          remove_target_ids -= [object['id'].to_i]
         end
+        where(id: remove_target_ids).destroy_all
       end
     end
 
