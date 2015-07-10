@@ -20,6 +20,7 @@ RSpec.describe User, type: :model do
       end
       it 'id has been imported' do
         expect(user.id).to eq 1
+        expect(User.exists?(id: 3)).to be true
       end
       it 'email has been imported' do
         expect(user.email).to eq 'a'
@@ -46,6 +47,7 @@ RSpec.describe User, type: :model do
       end
       it 'id has been imported' do
         expect(user.id).to eq 1
+        expect(User.exists?(id: 3)).to be true
       end
       it 'email has been imported' do
         expect(user.email).to eq 'a'
