@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
 
   context '.import' do
     let(:export_data) { File.read(File.expand_path('spec/tmp/export_string')) }
+    let(:export_data_without_image) { File.read(File.expand_path('spec/tmp/export_string_without_image')) }
     let(:user) { User.find_by(id: 1) }
 
     context 'no sync' do
@@ -57,6 +58,14 @@ RSpec.describe User, type: :model do
       end
       it 'image file has been imported' do
         expect(File.exist?(user.image.path)).to eq true
+      end
+      context 'without image' do
+        before do
+          User.import(export_data_without_image, sync: true)
+        end
+        it 'imported file should be removed' do
+          expect(user.image.blank?).to be true
+        end
       end
     end
   end

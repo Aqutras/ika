@@ -47,6 +47,8 @@ module Ika
                 end
                 if obj_url && need_update
                   object_params[key] = base64_conversion(obj_data, obj_name)
+                elsif obj_url.blank?
+                  object_params[('remove_' + key).to_sym] = true
                 end
               else
                 object_params[key] = object[key]
