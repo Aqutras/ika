@@ -25,6 +25,7 @@ module Ika
           remove_target_ids = []
         end
         objects.each do |object|
+          record_exists = false
           if exists?(id: object['id'].to_i)
             record_exists = true
             exist_object = where(id: object['id'].to_i).first
