@@ -20,9 +20,7 @@ module Ika
 
       ActiveRecord::Base.transaction do
         if options && options[:sync]
-          remove_target_ids = all.pluck(:id)
-        else
-          remove_target_ids = []
+          destroy_all
         end
         objects.each do |object|
           record_exists = false
@@ -61,9 +59,7 @@ module Ika
           else
             create(object_params)
           end
-          remove_target_ids -= [object['id'].to_i]
         end
-        where(id: remove_target_ids).destroy_all
       end
     end
 
