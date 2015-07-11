@@ -58,9 +58,9 @@ module Ika
           end
           if record_exists
             exist_object.attributes = object_params
-            exist_object.save(validate: false)
+            exist_object.save!(validate: false)
           else
-            new(object_params).save(validate: false)
+            new(object_params).save!(validate: false)
           end
           remove_target_ids -= [object['id'].to_i]
         end
