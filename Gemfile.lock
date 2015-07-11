@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ika (1.0.7)
+    ika (1.0.8)
       rails (~> 4.2.0)
 
 GEM
