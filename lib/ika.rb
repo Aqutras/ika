@@ -10,7 +10,7 @@ module Ika
   module ClassMethods
     include ::CarrierWave::Base64Uploader
 
-    def import(json_or_array, options = {})
+    def ika_import(json_or_array, options = {})
       if json_or_array.is_a?(Array)
         objects = json_or_array
       else
@@ -68,7 +68,11 @@ module Ika
       end
     end
 
-    def export(options = {}, objects = nil)
+    def import(json_or_array, options = {})
+      ika_import(json_or_array, options)
+    end
+
+    def ika_export(options = {}, object = nil)
       CarrierWave::Uploader::Base.json_with_raw_data = true
       all_symbol = true
       options[:include] ||= []
@@ -101,9 +105,13 @@ module Ika
       CarrierWave::Uploader::Base.json_with_raw_data = false
       JSON.generate(whole_obj_arr)
     end
+
+    def export(options = {}, object = nil)
+      ika_export(options, object)
+    end
   end
 
-  def export(options = {}, object = nil)
+  def ika_export(options = {}, object = nil)
     CarrierWave::Uploader::Base.json_with_raw_data = true
     objects ||= self
     all_symbol = true
@@ -131,6 +139,10 @@ module Ika
     end
     CarrierWave::Uploader::Base.json_with_raw_data = false
     JSON.generate(obj_hash)
+  end
+
+  def export(options = {}, object = nil)
+    ika_export(options, object)
   end
 end
 

@@ -8,6 +8,23 @@ RSpec.describe User, type: :model do
   let(:group) { create(:group, id: 1) }
   let(:group_user) { create(:group_user, user_id: 1, group_id: 1) }
 
+  context '.ika_import' do
+    let(:export_data) { File.read(File.expand_path('spec/tmp/export_string')) }
+    let(:export_data_without_image) { File.read(File.expand_path('spec/tmp/export_string_without_image')) }
+    let(:user) { User.find_by(id: 1) }
+
+    context 'no sync' do
+      before do
+        FileUtils.rm_rf(File.expand_path('spec/dummy/public/uploads'))
+        User.ika_import(export_data)
+      end
+      it 'id has been imported' do
+        expect(user.id).to eq 1
+        expect(User.exists?(id: 3)).to be true
+      end
+    end
+  end
+
   context '.import' do
     let(:export_data) { File.read(File.expand_path('spec/tmp/export_string')) }
     let(:export_data_without_image) { File.read(File.expand_path('spec/tmp/export_string_without_image')) }
@@ -109,6 +126,8 @@ RSpec.describe User, type: :model do
       ]
       export = User.export(include: [:groups, :group_users])
       expect(export).to match_json_expression(ret)
+      export = User.ika_export(include: [:groups, :group_users])
+      expect(export).to match_json_expression(ret)
     end
 
     it 'get only self' do
@@ -194,6 +213,8 @@ RSpec.describe User, type: :model do
       }
 
       export = User.find_by(id: 1).export(include: [:group_users, :groups])
+      expect(export).to match_json_expression(ret)
+      export = User.find_by(id: 1).ika_export(include: [:group_users, :groups])
       expect(export).to match_json_expression(ret)
     end
 
