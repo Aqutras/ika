@@ -79,6 +79,7 @@ User.exist?(id: 2)
 * **DO NOT USE sync mode if you are using `include` option.**
 * If the same id exists, Ika uses `UPDATE`.
 * Uploaded files by `carrierwave` will be checked their md5 hash and do nothing if they exist and md5 is matched.
+* If already exists `import` or `export` methods, you can use `ika_import` or `ika_export` methods.
 
 ## License
 
