@@ -7,6 +7,8 @@ RSpec.describe User, type: :model do
   let(:user) { create(:user, id: 1) }
   let(:group) { create(:group, id: 1) }
   let(:group_user) { create(:group_user, user_id: 1, group_id: 1) }
+  let(:tag) { create(:tag, id: 1) }
+  let(:comment) { create(:comment, id: 1) }
 
   context '.ika_import' do
     let(:export_data) { File.read(File.expand_path('spec/tmp/export_string')) }
@@ -110,7 +112,26 @@ RSpec.describe User, type: :model do
               'domain_id' => 'domain id',
               'name' => 'group name',
               'created_at' => JSON.parse(group.to_json)['created_at'],
-              'updated_at' => JSON.parse(group.to_json)['updated_at']
+              'updated_at' => JSON.parse(group.to_json)['updated_at'],
+              'tags' => [
+                {
+                  'id' => 1,
+                  'name' => 'tag name',
+                  'group_id' => 1,
+                  'created_at' => JSON.parse(tag.to_json)['created_at'],
+                  'updated_at' => JSON.parse(tag.to_json)['updated_at'],
+                  'comments' => [
+                    {
+                      'id' => 1,
+                      'name' => 'comment name',
+                      'comment' => 'test comment',
+                      'tag_id' => 1,
+                      'created_at' => JSON.parse(comment.to_json)['created_at'],
+                      'updated_at' => JSON.parse(comment.to_json)['updated_at']
+                    }
+                  ]
+                }
+              ]
             }
           ],
           'group_users' => [
@@ -124,9 +145,9 @@ RSpec.describe User, type: :model do
           ]
         }
       ]
-      export = User.export(include: [:groups, :group_users])
+      export = User.export(include: [{groups: {tags: :comments}}, :group_users])
       expect(export).to match_json_expression(ret)
-      export = User.ika_export(include: [:groups, :group_users])
+      export = User.ika_export(include: [{groups: {tags: :comments}}, :group_users])
       expect(export).to match_json_expression(ret)
     end
 
@@ -192,6 +213,34 @@ RSpec.describe User, type: :model do
           'data' => nil,
           'md5' => nil
         },
+        'groups' => [
+          {
+            'id' => 1,
+            'domain_id' => 'domain id',
+            'name' => 'group name',
+            'created_at' => JSON.parse(group.to_json)['created_at'],
+            'updated_at' => JSON.parse(group.to_json)['updated_at'],
+            'tags' => [
+              {
+                'id' => 1,
+                'name' => 'tag name',
+                'group_id' => 1,
+                'created_at' => JSON.parse(tag.to_json)['created_at'],
+                'updated_at' => JSON.parse(tag.to_json)['updated_at'],
+                'comments' => [
+                  {
+                    'id' => 1,
+                    'name' => 'comment name',
+                    'comment' => 'test comment',
+                    'tag_id' => 1,
+                    'created_at' => JSON.parse(comment.to_json)['created_at'],
+                    'updated_at' => JSON.parse(comment.to_json)['updated_at']
+                  }
+                ]
+              }
+            ]
+          }
+        ],
         'group_users' => [
           {
             'id' => 1,
@@ -200,21 +249,12 @@ RSpec.describe User, type: :model do
             'created_at' => JSON.parse(group_user.to_json)['created_at'],
             'updated_at' => JSON.parse(group_user.to_json)['updated_at']
           }
-        ],
-        'groups' => [
-          {
-            'id' => 1,
-            'domain_id' => 'domain id',
-            'name' => 'group name',
-            'created_at' => JSON.parse(group.to_json)['created_at'],
-            'updated_at' => JSON.parse(group.to_json)['updated_at']
-          }
         ]
       }
 
-      export = User.find_by(id: 1).export(include: [:group_users, :groups])
+      export = User.find_by(id: 1).export(include: [{groups: {tags: :comments}}, :group_users])
       expect(export).to match_json_expression(ret)
-      export = User.find_by(id: 1).ika_export(include: [:group_users, :groups])
+      export = User.find_by(id: 1).ika_export(include: [{groups: {tags: :comments}}, :group_users])
       expect(export).to match_json_expression(ret)
     end
 
