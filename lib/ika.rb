@@ -90,14 +90,14 @@ module Ika
 
       whole_obj_arr = []
       objects.each do |object|
-        obj_arr = {}
+        obj_arr = JSON.parse(object.to_json)
         options[:include].each do |relation|
           if relation.is_a?(::Hash)
             relation.keys.each do |property|
               obj_arr[property] = JSON.parse(object.try(property).export({include: relation[property]}, object.try(property)))
             end
           elsif relation.is_a?(Symbol)
-            obj_arr[relation] = JSON.parse(object.try(:relation).to_json(include: relation))
+            obj_arr[relation] = JSON.parse(object.try(relation).present? ? object.try(relation).to_json : '[]')
           end
         end
         whole_obj_arr.push(obj_arr)
