@@ -72,12 +72,12 @@ module Ika
       ika_import(json_or_array, options)
     end
 
-    def ika_export(options = {}, object = nil)
+    def ika_export(options = {}, objects = nil)
       CarrierWave::Uploader::Base.json_with_raw_data = true
       all_symbol = true
       options[:include] ||= []
       options[:include] = [options[:include]] unless options[:include].is_a?(Array)
-      objects = self.includes(options[:include]) unless objects
+      objects ||= self.includes(options[:include])
       options[:include].each do |opt|
         all_symbol = false unless opt.is_a?(Symbol)
       end
@@ -106,12 +106,12 @@ module Ika
       JSON.generate(whole_obj_arr)
     end
 
-    def export(options = {}, object = nil)
-      ika_export(options, object)
+    def export(options = {}, objects = nil)
+      ika_export(options, objects)
     end
   end
 
-  def ika_export(options = {}, object = nil)
+  def ika_export(options = {}, objects = nil)
     CarrierWave::Uploader::Base.json_with_raw_data = true
     objects ||= self
     all_symbol = true
@@ -141,8 +141,8 @@ module Ika
     JSON.generate(obj_hash)
   end
 
-  def export(options = {}, object = nil)
-    ika_export(options, object)
+  def export(options = {}, objects = nil)
+    ika_export(options, objects)
   end
 end
 
