@@ -17,6 +17,7 @@ module Ika
         objects = JSON.parse(json_or_array)
         objects = [objects] unless objects.is_a?(Array)
       end
+      json_or_array = nil
 
       ActiveRecord::Base.transaction do
         if options && options[:sync]
@@ -55,6 +56,7 @@ module Ika
                 object_params[key] = object[key]
               end
             end
+            object.delete(key) if key != 'id'
           end
           if record_exists
             exist_object.attributes = object_params
@@ -63,6 +65,7 @@ module Ika
             new(object_params).save!(validate: false)
           end
           remove_target_ids -= [object['id'].to_i]
+          object.delete('id')
         end
         where(id: remove_target_ids).destroy_all
       end
