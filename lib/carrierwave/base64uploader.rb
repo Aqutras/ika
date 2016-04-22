@@ -16,16 +16,21 @@ module CarrierWave
     end
 
     def split_base64(uri_str)
-      if uri_str.match(%r{data:(.*?);(.*?),(.*)$})
-        uri = Hash.new
-        uri[:type] = $1
-        uri[:encoder] = $2
-        uri[:data] = $3
-        uri[:extension] = $1.split('/')[1]
-        return uri
-      else
-        return nil
-      end
+      # uri_str.match(%r{data:(.*?);(.*?),(.*)$})
+      a = uri_str.index(/^data:/)
+      return nil unless a
+      b = uri_str.index(/;/, a + 1)
+      return nil unless b
+      c = uri_str.index(/,/, b + 1)
+      return nil unless c
+
+      type = uri_str[a + 5, b - a - 5]
+      {
+        type: type,
+        encoder: uri_str[b + 1, c - b - 1],
+        data: uri_str[c + 1, uri_str.length - c - 1],
+        extension: type.split('/')[1]
+      }
     end
   end
 end
