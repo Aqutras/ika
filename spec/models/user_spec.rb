@@ -140,7 +140,13 @@ RSpec.describe User, type: :model do
               'user_id' => 1,
               'group_id' => 1,
               'created_at' => JSON.parse(group_user.to_json)['created_at'],
-              'updated_at' => JSON.parse(group_user.to_json)['updated_at']
+              'updated_at' => JSON.parse(group_user.to_json)['updated_at'],
+              'image' => {
+                'url' => nil,
+                'name' => nil,
+                'data' => nil,
+                'md5' => nil
+              }
             }
           ]
         }
@@ -190,7 +196,13 @@ RSpec.describe User, type: :model do
               'user_id' => 1,
               'group_id' => 1,
               'created_at' => JSON.parse(group_user.to_json)['created_at'],
-              'updated_at' => JSON.parse(group_user.to_json)['updated_at']
+              'updated_at' => JSON.parse(group_user.to_json)['updated_at'],
+              'image' => {
+                'url' => nil,
+                'name' => nil,
+                'data' => nil,
+                'md5' => nil
+              }
             }
           ]
         }
@@ -247,7 +259,13 @@ RSpec.describe User, type: :model do
             'user_id' => 1,
             'group_id' => 1,
             'created_at' => JSON.parse(group_user.to_json)['created_at'],
-            'updated_at' => JSON.parse(group_user.to_json)['updated_at']
+            'updated_at' => JSON.parse(group_user.to_json)['updated_at'],
+            'image' => {
+              'url' => nil,
+              'name' => nil,
+              'data' => nil,
+             'md5' => nil
+            }
           }
         ]
       }
@@ -294,7 +312,13 @@ RSpec.describe User, type: :model do
             'user_id' => 1,
             'group_id' => 1,
             'created_at' => JSON.parse(group_user.to_json)['created_at'],
-            'updated_at' => JSON.parse(group_user.to_json)['updated_at']
+            'updated_at' => JSON.parse(group_user.to_json)['updated_at'],
+            'image' => {
+              'url' => nil,
+              'name' => nil,
+              'data' => nil,
+              'md5' => nil
+            }
           }
         ]
       }

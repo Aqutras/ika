@@ -76,6 +76,7 @@ module Ika
     end
 
     def ika_export(options = {}, objects = nil)
+      preset_json_with_raw_data = CarrierWave::Uploader::Base.json_with_raw_data
       CarrierWave::Uploader::Base.json_with_raw_data = true
       all_symbol = true
       options[:include] ||= []
@@ -87,7 +88,7 @@ module Ika
 
       if all_symbol
         json = objects.to_json(include: options[:include])
-        CarrierWave::Uploader::Base.json_with_raw_data = false
+        CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
         return json
       end
 
@@ -105,7 +106,7 @@ module Ika
         end
         whole_obj_arr.push(obj_arr)
       end
-      CarrierWave::Uploader::Base.json_with_raw_data = false
+      CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
       JSON.generate(whole_obj_arr)
     end
 
@@ -115,6 +116,7 @@ module Ika
   end
 
   def ika_export(options = {}, objects = nil)
+    preset_json_with_raw_data = CarrierWave::Uploader::Base.json_with_raw_data
     CarrierWave::Uploader::Base.json_with_raw_data = true
     objects ||= self
     all_symbol = true
@@ -126,7 +128,7 @@ module Ika
 
     if all_symbol
       json = objects.to_json(include: options[:include])
-      CarrierWave::Uploader::Base.json_with_raw_data = false
+      CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
       return json
     end
 
@@ -140,7 +142,7 @@ module Ika
         obj_hash[relation] = JSON.parse(objects.try(relation).to_json)
       end
     end
-    CarrierWave::Uploader::Base.json_with_raw_data = false
+    CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
     JSON.generate(obj_hash)
   end
 
