@@ -81,7 +81,13 @@ User.exist?(id: 2)
 * Uploaded files by `carrierwave` will be checked their md5 hash and do nothing if they exist and md5 is matched.
 * If already exists `import` or `export` methods, you can use `ika_import` or `ika_export` methods.
 
+## Contributing
+
+### Test
+
+You need to run `bundle exec rake db:create db:migrate` on `spec/dummy` before testing.
+
 ## License
 
-Copyright (c) 2015 Aqutras
+Copyright (c) 2015-2016 Aqutras
 This project rocks and uses MIT-LICENSE.
