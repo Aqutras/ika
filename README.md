@@ -74,14 +74,24 @@ User.exist?(id: 2)
 # => false
 ```
 
+## Sync mode
+
+Sync mode performs that ika deletes all data of importing models. For example, if exporting data includes that id is 1 and 2, and there are already exists data that id is 1, 2 and 3, sync importing deletes the data of id 3.
+
 ## Others
 
 * **DO NOT USE sync mode if you are using `include` option.**
 * If the same id exists, Ika uses `UPDATE`.
 * Uploaded files by `carrierwave` will be checked their md5 hash and do nothing if they exist and md5 is matched.
-* If already exists `import` or `export` methods, you can use `ika_import` or `ika_export` methods.
+* If there already exists `import` or `export` methods, you can use `ika_import` or `ika_export` methods.
+
+## Contributing
+
+### Test
+
+You need to run `bundle exec rake db:create db:migrate` on `spec/dummy` before testing.
 
 ## License
 
-Copyright (c) 2015 Aqutras
+Copyright (c) 2015-2016 Aqutras
 This project rocks and uses MIT-LICENSE.

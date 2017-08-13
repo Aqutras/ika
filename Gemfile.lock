@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     ika (1.0.12)
-      rails (~> 4.2.0)
+      activerecord (>= 4.0)
 
 GEM
   remote: https://rubygems.org/
@@ -53,7 +53,7 @@ GEM
       mime-types (>= 1.16)
     coderay (1.1.0)
     columnize (0.9.0)
-    concurrent-ruby (1.0.1)
+    concurrent-ruby (1.0.2)
     coveralls (0.8.1)
       json (~> 1.8)
       rest-client (>= 1.6.8, < 2)
@@ -70,7 +70,7 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    globalid (0.3.6)
+    globalid (0.3.7)
       activesupport (>= 4.1.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
@@ -150,10 +150,10 @@ GEM
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
     slop (3.6.0)
-    sprockets (3.6.0)
+    sprockets (3.7.0)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.0.4)
+    sprockets-rails (3.2.0)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
@@ -179,8 +179,9 @@ DEPENDENCIES
   ika!
   json_expressions
   pry-byebug
+  rails (>= 4.0)
   rspec-rails (~> 3.0)
   sqlite3 (~> 1.0)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
