@@ -127,7 +127,11 @@ module Ika
     end
 
     if all_symbol
-      json = objects.to_json(include: options[:include], methods: :type)
+      if objects.attributes.keys.include? 'type'
+        json = objects.to_json(include: options[:include], methods: :type)
+      else
+        json = objects.to_json(include: options[:include])
+      end
       CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
       return json
     end
