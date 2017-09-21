@@ -1,6 +1,5 @@
-if Rails.env == 'test'
-  require 'carrierwave'
-end
+require 'oj'
+require 'carrierwave' if Rails.env == 'test'
 require 'carrierwave/serialization'
 require 'carrierwave/base64uploader'
 
@@ -14,7 +13,7 @@ module Ika
       if json_or_array.is_a?(Array)
         objects = json_or_array
       else
-        objects = JSON.parse(json_or_array)
+        objects = Oj.load(json_or_array)
         objects = [objects] unless objects.is_a?(Array)
       end
       json_or_array = nil
@@ -94,20 +93,20 @@ module Ika
 
       whole_obj_arr = []
       objects.each do |object|
-        obj_arr = JSON.parse(object.to_json)
+        obj_arr = Oj.load(object.to_json)
         options[:include].each do |relation|
           if relation.is_a?(::Hash)
             relation.keys.each do |property|
-              obj_arr[property] = JSON.parse(object.try(property).export({include: relation[property]}, object.try(property)))
+              obj_arr[property.to_s] = Oj.load(object.try(property).export({include: relation[property]}, object.try(property)))
             end
           elsif relation.is_a?(Symbol)
-            obj_arr[relation] = JSON.parse(object.try(relation).present? ? object.try(relation).to_json : '[]')
+            obj_arr[relation.to_s] = Oj.load(object.try(relation).present? ? object.try(relation).to_json : '[]')
           end
         end
         whole_obj_arr.push(obj_arr)
       end
       CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
-      JSON.generate(whole_obj_arr)
+      Oj.dump(whole_obj_arr)
     end
 
     def export(options = {}, objects = nil)
@@ -136,18 +135,18 @@ module Ika
       return json
     end
 
-    obj_hash = JSON.parse objects.to_json
+    obj_hash = Oj.load objects.to_json
     options[:include].each do |relation|
       if relation.is_a?(::Hash)
         relation.keys.each do |property|
-          obj_hash[property] = JSON.parse(objects.try(property).includes(relation[property]).export({include: relation[property]}, objects.try(property)))
+          obj_hash[property.to_s] = Oj.load(objects.try(property).includes(relation[property]).export({include: relation[property]}, objects.try(property)))
         end
       elsif relation.is_a?(Symbol)
-        obj_hash[relation] = JSON.parse(objects.try(relation).to_json)
+        obj_hash[relation.to_s] = Oj.load(objects.try(relation).to_json)
       end
     end
     CarrierWave::Uploader::Base.json_with_raw_data = preset_json_with_raw_data
-    JSON.generate(obj_hash)
+    Oj.dump(obj_hash)
   end
 
   def export(options = {}, objects = nil)
