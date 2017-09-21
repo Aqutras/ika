@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activerecord', '>= 4.0'
 
-  s.add_development_dependency 'rails', '>= 4.0'
+  s.add_development_dependency 'rails', '>= 5.1'
   s.add_development_dependency 'sqlite3', '~> 1.0'
   s.add_development_dependency 'rspec-rails', '~> 3.0'
   s.add_development_dependency 'factory_girl_rails'
