@@ -1,3 +1,11 @@
+## 1.1.0 (Sep 24, 2017) ##
+
+* 3 PR merged:
+  * Merge pull request #12 from fix_dependency_of_gems
+  * Merge pull request #13 from upgrade_rails
+  * Merge pull request #14 from using_oj
+    * Speed up by using oj (about 10% faster)
+
 ## 1.0.12 (Apr 23, 2016) ##
 
 * 1 PR merged:
